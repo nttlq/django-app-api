@@ -76,3 +76,23 @@ class ModelTests(TestCase):
         tag = models.Tag.objects.create(user=user, name="Tag1")
 
         self.assertEqual(str(tag), tag.name)
+
+    def test_create_lesson(self):
+        """Test creating an lesson is successful."""
+        user = create_user()
+        course = models.Course.objects.create(
+            user=user,
+            title="Sample course name",
+            price=Decimal("125.50"),
+            description="Sample course description.",
+        )
+
+        lesson = models.Lesson.objects.create(
+            user=user,
+            name="Lesson1",
+            data="Checking",
+            pub_date="2023-11-26",
+            course=course,
+        )
+
+        self.assertEqual(str(lesson), lesson.name)

@@ -73,3 +73,22 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Lesson(models.Model):
+    """Lesson of course."""
+
+    name = models.CharField(max_length=255)
+    data = models.TextField()
+    pub_date = models.DateField()
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+    )
+
+    def __str__(self):
+        return self.name
