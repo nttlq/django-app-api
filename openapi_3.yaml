@@ -1,0 +1,1189 @@
+openapi: 3.0.3
+info:
+  title: Swagger eStepik - OpenAPI 3.0
+  description: |-
+    Здесь задокументирован api образовательной онлайн платформы eStepik
+  #termsOfService: http://swagger.io/terms/
+  #contact:
+  #  email: apiteam@swagger.io
+  #license:
+  #  name: Apache 2.0
+  #  url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+#externalDocs:
+ # description: Find out more about Swagger
+ # url: http://swagger.io
+servers:
+  - url: https://eStepik.swagger.io/api/v3
+tags:
+  - name: courses
+    description: Courses on eStepik
+    externalDocs:
+      description: Find out more
+      url: http://swagger.io
+  - name: lessons
+    description: Access to course lessons
+    externalDocs:
+      description: Find out more about eStepik
+      url: http://swagger.io
+  - name: user
+    description: Operations about user
+paths:
+  /courses/add:
+    post:
+      tags:
+        - courses
+      summary: Add a new course to the list
+      description: Add a new course to the list
+      operationId: addCourse
+      requestBody:
+        description: Create a new course in the list
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CoursePost'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CourseGet'
+        '400':
+          description: Some error
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+        '403':
+          description: Auth failed
+        '500':
+          description: Some internal problem
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+      security:
+        - api_key: []
+    
+  
+  /course/{page}: 
+    get:
+      tags:
+        - courses
+      summary: Get most popular courses
+      description: Get most popular courses
+      operationId: getPopularCourses
+      parameters:
+        - name: page
+          in: path
+          description: Page values that need for partial downloading. Starts from 1
+          required: true
+          explode: true
+          schema:
+            type: integer
+            format: uint64
+            default: 1
+        - name: last_id
+          in: query
+          description: Last id from which starting loading. If not required, than get last
+          required: false
+          explode: true
+          schema:
+            type: integer
+            format: uint64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CourseGet'
+        '400':
+          description: Invalid page or last id supplied
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+        '500':
+          description: Internal Server problem
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+     
+  /course/findByTags/{page}: 
+    get:
+      tags:
+        - courses
+      summary: Finds Course by tags
+      description: Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
+      operationId: findCourseByTags
+      parameters:
+        - name: tags
+          in: query
+          description: Tags to filter by
+          required: true
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: page
+          in: path
+          description: Page values that need for partial downloading. Starts from 1
+          required: true
+          explode: true
+          schema:
+            type: integer
+            format: uint64
+            default: 1
+        - name: last_id
+          in: query
+          description: Last id from which starting loading. If not required, than get last
+          required: false
+          explode: true
+          schema:
+            type: integer
+            format: uint64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CourseGet'          
+        '400':
+          description: Invalid tag or page or last id value
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server problem
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+
+  /courses/{courseId}:
+    get:
+      tags:
+        - courses
+      summary: Find course by ID
+      description: Returns a single course
+      operationId: getCourseById
+      parameters:
+        - name: courseId
+          in: path
+          description: ID of course to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseGet'          
+        '400':
+          description: Invalid ID supplied
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+        '404':
+          description: Course not found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+        '500':
+          description: Internal Server problem
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+
+    put:
+      tags:
+        - courses
+      summary: Updates a course in the list with form data
+      description: Updates a course in the list with form data
+      operationId: updateCourseWithForm
+      parameters:
+        - name: courseId
+          in: path
+          description: ID of course that needs to be updated
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Update course in the list
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CoursePost'
+        
+      responses:
+        '204':
+          description: Success
+        '403':
+          description: Auth failed
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error'
+        '404':
+          description: Course not found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+        '500':
+          description: Internal Server problem
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+      security:
+        - api_key: []
+    delete:
+      tags:
+        - courses
+      summary: Deletes a course
+      description: delete a course
+      operationId: deleteCourse
+      parameters:
+        #- name: api_key
+        #  in: header
+        #  description: ''
+        ##  required: false
+        #  schema:
+        #    type: string
+        - name: courseId
+          in: path
+          description: Course id to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Success
+        '400':
+          description: Invalid course value
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error'
+        '403':
+          description: Auth failed
+        '404':
+          description: Course not found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+        '500':
+          description: Internal Server problem
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error'
+      security:
+        - api_key: []
+  
+  /courses/{courseId}/SendMark:
+    put:
+      tags:
+        - courses
+      summary: Send mark to the course
+      description: Send mark to the course
+      operationId: sendMarkToCourse
+      parameters:
+        - name: courseId
+          in: path
+          description: ID of course that needs to be updated
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Mark
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RateReq'
+        
+      responses:
+        '204':
+          description: Success
+        '403':
+          description: Auth failed
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error'
+        '404':
+          description: Course not found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+        '500':
+          description: Internal Server problem
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error'
+      security:
+        - api_key: []
+      
+  
+  
+  /courses/Subscribed/{page}:
+    get:
+      tags:
+        - courses
+      summary: Get subscribed courses
+      description: Get subscribed courses
+      operationId: getSubscribed
+      parameters:
+        - name: page
+          in: path
+          description: Page values that need for partial downloading. Starts from 1
+          required: true
+          explode: true
+          schema:
+            type: integer
+            format: uint64
+            default: 1
+        - name: last_id
+          in: query
+          description: Last id from which starting loading. If not required, than get last
+          required: false
+          explode: true
+          schema:
+            type: integer
+            format: uint64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CourseGet'          
+        '400':
+          description: Invalid page value
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error'
+        '403':
+          description: Auth failed
+        '500':
+          description: Internal Server problem
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error'
+      security:
+        - api_key: []
+        
+  /courses/{courseId}/SubDesc:
+    put:
+      tags:
+      - courses
+      summary: Sub/Desc course
+      description: Subscribe to course of describe from
+      operationId: SubDescCourse
+      parameters:
+      - name: courseId
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+          description: Update lesson at course
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubDesc'
+      responses:
+        '200':
+          description: Success
+          content: 
+            application/json:
+                schema:
+                  $ref: '#/components/schemas/SubDesc'
+        '400':
+          description: Invalid course id
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error'
+        '403':
+          description: Auth failed
+        '404':
+          description: Course not found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+        '500':
+          description: Internal Server problem
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error'
+      security:
+        - api_key: []
+    
+    
+  
+  /courses/{courseId}/lesson/{lessonId}:
+    get:
+      tags:
+      - lessons
+      summary: Get lesson from course
+      description: Get lesson from course
+      operationId: GetLesson
+      parameters:
+      - name: courseId
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: lessonId
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+        '400':
+          description: Invalid course or lesson id
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error'
+        '404':
+          description: Course or lesson not found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+        '500':
+          description: Internal Server problem
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error'
+    put:
+      tags:
+      - lessons
+      summary: Update lesson at course
+      description: Update lesson at course
+      operationId: PutLesson
+      parameters:
+      - name: courseId
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: lessonId
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        description: Update lesson at course
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LessonModify'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+        '400':
+          description: Invalid course or lesson id
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error'
+        '403':
+          description: Auth failed
+        '404':
+          description: Course or lesson not found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+        '500':
+          description: Internal Server problem
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error'
+      security:
+        - api_key: []
+        
+    delete:
+      tags:
+      - lessons
+      summary: Delete lesson from course
+      description: Delete lesson from course
+      operationId: DeleteLesson
+      parameters:
+      - name: courseId
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: lessonId
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '204':
+          description: Success
+        '400':
+          description: Invalid course or lesson id
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error'
+        '403':
+          description: Auth failed
+        '404':
+          description: Course or lesson not found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+        '500':
+          description: Internal Server problem
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error'
+      security:
+        - api_key: []
+          
+  /courses/{courseId}/lesson:
+    post:
+      tags:
+      - lessons
+      summary: Add lesson to course
+      description: Add lesson to course
+      operationId: PostLesson
+      parameters:
+      - name: courseId
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        description: Add lesson to course
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LessonModify'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+        '400':
+          description: Invalid course id
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+        '403':
+          description: Auth failed
+        '404':
+          description: Course not found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+        '500':
+          description: Internal Server problem
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error'
+      security:
+        - api_key: []
+
+  /user/{login}:
+    get:
+      tags:
+      - user
+      summary: Get user page
+      description: Get user page
+      operationId: GetUser
+      parameters:
+      - name: login
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPage'
+        '400':
+          description: Invalid login
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+        '500':
+          description: Internal Server problem
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error'
+    put:
+      tags:
+      - user
+      summary: Update user page
+      description: Update user page
+      operationId: UpdateUser
+      parameters:
+      - name: login
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Update user page
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPageRedact'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPage'
+        '400':
+          description: Invalid login
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+        '403':
+          description: Auth failed
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+        '500':
+          description: Internal Server problem
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error'
+      security:
+        - api_key: []
+        
+  /registrate:
+    post:
+      tags:
+      - user
+      summary: Registrate User
+      description: Registrate User
+      operationId: RegistrateUser
+      requestBody:
+        description: Update user page
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Registration_Login'
+      responses:
+        '204':
+          description: Success
+        '400':
+          description: Registration failed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+        '500':
+          description: Internal Server problem
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error'
+                  
+  /login:
+    post:
+      tags:
+      - user
+      summary: Login User
+      description: Login User
+      operationId: LoginUser
+      requestBody:
+        description: Update user page
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Registration_Login'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LoginResponce' 
+        '400':
+          description: Login failed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+        '500':
+          description: Internal Server problem
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error'
+                  
+  /refresh:
+    post:
+      tags:
+      - user
+      summary: Refresh token
+      description: Refresh token
+      operationId: RefreshToken
+      requestBody:
+        description: Update user page
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  successToken:
+                    type: string
+        '400':
+          description: Login failed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error' 
+        '500':
+          description: Internal Server problem
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error'
+          
+          
+
+components:
+  schemas:
+    CourseGet:
+      required:
+        - name
+        - photoUrls
+        - tags
+        - status
+        - id
+        - owner
+        - lessons
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: PythonForGays
+        photoUrls:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        owner:
+          type: string
+          description: course owner
+        lessons:
+          type: array
+          items:
+            type: object
+            properties:
+              lessonId:
+                type: integer
+              lessonTitle:
+                type: string
+
+    CoursePost:
+      required:
+        - name
+        - photoUrls
+        - tags
+        - status
+      type: object
+      properties:
+        name:
+          type: string
+          example: PythonForGays
+        photoUrls:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+    
+    
+    Lesson:
+      type: object
+      required:
+      - id
+      - title
+      - lessonDescription
+      - info
+      - rating
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+          description: Название урока
+        lessonDescription:
+          type: string
+          description: Описание урока
+        info:
+          type: array
+          items:
+            $ref: '#/components/schemas/Page'
+        rating:
+          type: object
+          properties:
+            one:
+              type: integer
+            two:
+              type: integer
+            three:
+              type: integer
+            four:
+              type: integer
+            five:
+              type: integer
+    
+    LessonModify:
+      type: object
+      required:
+      - title
+      - lessonDescription
+      - info
+      - rating
+      properties:
+        title:
+          type: string
+          description: Название урока
+        lessonDescription:
+          type: string
+          description: Описание урока
+        info:
+          type: array
+          items:
+            $ref: '#/components/schemas/Page'
+            
+         
+    Page:
+      type: object
+      required:
+        - text
+        - materialUrls
+        - test
+      properties:
+        text:
+          type: string
+          example: Для установки Питона достаточно возвать к богу ящеров
+        materialUrls:
+          type: array
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+                description: Url изображения
+              position:
+                type: integer
+                description: Позиция в тексте
+              urlType:
+                type: string
+                description: Вид материала
+                enum:
+                  - YouTube
+                  - RuTube
+                  - Photo
+                  - VkVideo
+        test:
+          type: array
+          items:
+            type: object
+            properties:
+              isCorrect:
+                type: boolean
+                description: Верен ли ответ
+              variant:
+                type: string
+                description: Вариант ответа
+    
+    Registration_Login:
+      type: object
+      required:
+      - login
+      - password
+      properties:
+        login:
+          type: string
+        password: 
+          type: string
+    
+    Error:
+      type: object
+      required:
+      - errorMessage
+      properties:
+        errorMessage:
+          type: string
+    
+    LoginResponce:
+      type: object
+      required:
+      - accessToken
+      - refreshToken
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+    
+    SubDesc:
+      type: object
+      required:
+      - isSub
+      properties:
+        isSub:
+          type: boolean
+    
+    RateReq:
+      type: object
+      required:
+        - mark
+      properties:
+        mark:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+    
+    UserPage:
+      type: object
+      required:
+      - id
+      - name
+      - login
+      - photoUrl
+      - userDescription
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          description: Имя пользователя
+        login:
+          type: string
+          description: Уникальное имя пользователя
+        photoUrl:
+          type: string
+        userDescription:
+          type: string
+          
+    UserPageRedact:
+      type: object
+      required:
+      - name
+      - photoUrl
+      - userDescription
+      properties:
+        name:
+          type: string
+          description: Имя пользователя
+        photoUrl:
+          type: string
+        userDescription:
+          type: string
+          
+  requestBodies:
+    Course:
+      description: Course object that needs to be added to the list
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CoursePost'
+
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
