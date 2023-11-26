@@ -33,10 +33,8 @@ def create_course(user, **params):
     """Create and return a sample course."""
     defaults = {
         "title": "Sample course title",
-        # "time_minutes": 232,
         "price": Decimal("125.25"),
         "description": "Sample description",
-        # "link": "http://example.com/course.pdf",
     }
     defaults.update(params)
 
