@@ -1,0 +1,875 @@
+openapi: 3.0.3
+info:
+  title: ''
+  version: 0.0.0
+paths:
+  /api/v1/course/courses/:
+    get:
+      operationId: course_courses_list
+      description: View for manage course APIs.
+      parameters:
+      - in: query
+        name: tags
+        schema:
+          type: string
+        description: Comma separated list of tag IDs to filter
+      tags:
+      - course
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Course'
+          description: ''
+    post:
+      operationId: course_courses_create
+      description: View for manage course APIs.
+      tags:
+      - course
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseDetail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CourseDetail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CourseDetail'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseDetail'
+          description: ''
+  /api/v1/course/courses/{id}/:
+    get:
+      operationId: course_courses_retrieve
+      description: View for manage course APIs.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this course.
+        required: true
+      tags:
+      - course
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseDetail'
+          description: ''
+    put:
+      operationId: course_courses_update
+      description: View for manage course APIs.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this course.
+        required: true
+      tags:
+      - course
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseDetail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CourseDetail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CourseDetail'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseDetail'
+          description: ''
+    patch:
+      operationId: course_courses_partial_update
+      description: View for manage course APIs.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this course.
+        required: true
+      tags:
+      - course
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCourseDetail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCourseDetail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCourseDetail'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseDetail'
+          description: ''
+    delete:
+      operationId: course_courses_destroy
+      description: View for manage course APIs.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this course.
+        required: true
+      tags:
+      - course
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/course/courses/{id}/upload-image/:
+    post:
+      operationId: course_courses_upload_image_create
+      description: Upload an image to course.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this course.
+        required: true
+      tags:
+      - course
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseImage'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CourseImage'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CourseImage'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseImage'
+          description: ''
+  /api/v1/course/lessons/:
+    get:
+      operationId: course_lessons_list
+      description: Manage lessons in the database.
+      tags:
+      - course
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lesson'
+          description: ''
+  /api/v1/course/lessons/{id}/:
+    put:
+      operationId: course_lessons_update
+      description: Manage lessons in the database.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this lesson.
+        required: true
+      tags:
+      - course
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Lesson'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Lesson'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Lesson'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+          description: ''
+    patch:
+      operationId: course_lessons_partial_update
+      description: Manage lessons in the database.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this lesson.
+        required: true
+      tags:
+      - course
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedLesson'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedLesson'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedLesson'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+          description: ''
+    delete:
+      operationId: course_lessons_destroy
+      description: Manage lessons in the database.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this lesson.
+        required: true
+      tags:
+      - course
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/course/tags/:
+    get:
+      operationId: course_tags_list
+      description: Manage tags in the database.
+      tags:
+      - course
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tag'
+          description: ''
+  /api/v1/course/tags/{id}/:
+    put:
+      operationId: course_tags_update
+      description: Manage tags in the database.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this tag.
+        required: true
+      tags:
+      - course
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Tag'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Tag'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: ''
+    patch:
+      operationId: course_tags_partial_update
+      description: Manage tags in the database.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this tag.
+        required: true
+      tags:
+      - course
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTag'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTag'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTag'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: ''
+    delete:
+      operationId: course_tags_destroy
+      description: Manage tags in the database.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this tag.
+        required: true
+      tags:
+      - course
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/schema/:
+    get:
+      operationId: schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - af
+          - ar
+          - ar-dz
+          - ast
+          - az
+          - be
+          - bg
+          - bn
+          - br
+          - bs
+          - ca
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - el
+          - en
+          - en-au
+          - en-gb
+          - eo
+          - es
+          - es-ar
+          - es-co
+          - es-mx
+          - es-ni
+          - es-ve
+          - et
+          - eu
+          - fa
+          - fi
+          - fr
+          - fy
+          - ga
+          - gd
+          - gl
+          - he
+          - hi
+          - hr
+          - hsb
+          - hu
+          - hy
+          - ia
+          - id
+          - ig
+          - io
+          - is
+          - it
+          - ja
+          - ka
+          - kab
+          - kk
+          - km
+          - kn
+          - ko
+          - ky
+          - lb
+          - lt
+          - lv
+          - mk
+          - ml
+          - mn
+          - mr
+          - ms
+          - my
+          - nb
+          - ne
+          - nl
+          - nn
+          - os
+          - pa
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sr
+          - sr-latn
+          - sv
+          - sw
+          - ta
+          - te
+          - tg
+          - th
+          - tk
+          - tr
+          - tt
+          - udm
+          - uk
+          - ur
+          - uz
+          - vi
+          - zh-hans
+          - zh-hant
+      tags:
+      - schema
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/user/create/:
+    post:
+      operationId: user_create_create
+      description: Create a new user in the system.
+      tags:
+      - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/v1/user/me/:
+    get:
+      operationId: user_me_retrieve
+      description: Manage the authenticated user.
+      tags:
+      - user
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    put:
+      operationId: user_me_update
+      description: Manage the authenticated user.
+      tags:
+      - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: user_me_partial_update
+      description: Manage the authenticated user.
+      tags:
+      - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/v1/user/token/:
+    post:
+      operationId: user_token_create
+      description: Create a new auth token for user.
+      tags:
+      - user
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthToken'
+          description: ''
+components:
+  schemas:
+    AuthToken:
+      type: object
+      description: Serializer for the user auth token.
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+      required:
+      - email
+      - password
+    Course:
+      type: object
+      description: Serializer for courses.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+      required:
+      - id
+      - price
+      - title
+    CourseDetail:
+      type: object
+      description: Serializer for course detail view.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+        description:
+          type: string
+        image:
+          type: string
+          format: uri
+          nullable: true
+      required:
+      - id
+      - price
+      - title
+    CourseImage:
+      type: object
+      description: Serializer for uploading images to courses.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        image:
+          type: string
+          format: uri
+          nullable: true
+      required:
+      - id
+      - image
+    Lesson:
+      type: object
+      description: Serializer for lessons.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        data:
+          type: string
+        pub_date:
+          type: string
+          format: date
+        course:
+          type: integer
+          readOnly: true
+      required:
+      - course
+      - data
+      - id
+      - name
+      - pub_date
+    PatchedCourseDetail:
+      type: object
+      description: Serializer for course detail view.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+        description:
+          type: string
+        image:
+          type: string
+          format: uri
+          nullable: true
+    PatchedLesson:
+      type: object
+      description: Serializer for lessons.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        data:
+          type: string
+        pub_date:
+          type: string
+          format: date
+        course:
+          type: integer
+          readOnly: true
+    PatchedTag:
+      type: object
+      description: Serializer for tags.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+    PatchedUser:
+      type: object
+      description: Serializer for the user object.
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 128
+          minLength: 5
+        name:
+          type: string
+          maxLength: 255
+    Tag:
+      type: object
+      description: Serializer for tags.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+      required:
+      - id
+      - name
+    User:
+      type: object
+      description: Serializer for the user object.
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 128
+          minLength: 5
+        name:
+          type: string
+          maxLength: 255
+      required:
+      - email
+      - name
+      - password
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"
